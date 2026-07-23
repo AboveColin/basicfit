@@ -234,6 +234,38 @@ class BasicFitClient:
         """Return only gym check-ins (``GYM_VISIT``) in the range."""
         return [a for a in await self.get_activities(from_date, to_date) if a.is_gym_visit]
 
+    async def get_all_visits(self, *, max_windows: int = 20) -> list[Activity]:
+        """Return every recorded gym check-in, paging back through history.
+
+        The ``/activities`` endpoint caps each request at
+        :data:`MAX_ACTIVITY_RANGE_DAYS`, so this walks backwards in
+        year-sized windows until it hits an empty window (or ``max_windows``),
+        de-duplicates, and returns the visits most-recent first.
+
+        Note: this reflects the visits Basic-Fit's activity feed has records
+        for. It can be lower than the lifetime "visits" counter shown in the
+        Basic-Fit app, which may include check-ins from before the activity
+        feed began tracking them.
+        """
+        step = timedelta(days=MAX_ACTIVITY_RANGE_DAYS - 1)
+        end = date.today()
+        seen: set[str] = set()
+        visits: list[Activity] = []
+        for _ in range(max_windows):
+            start = end - step
+            window = await self.get_visits(from_date=start, to_date=end)
+            if not window:
+                break
+            for visit in window:
+                key = str(visit.start_time or "") + "|" + str(visit.date or "")
+                if key in seen:
+                    continue
+                seen.add(key)
+                visits.append(visit)
+            end = start - timedelta(days=1)
+        visits.sort(key=lambda a: str(a.start_time or a.date or ""), reverse=True)
+        return visits
+
     async def get_body_measurements(
         self, limit: Optional[int] = None
     ) -> list[BodyMeasurement]:
