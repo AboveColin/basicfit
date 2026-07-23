@@ -54,6 +54,7 @@ from .models import (
     Club,
     Member,
     Recipe,
+    Streak,
     TokenSet,
     Workout,
 )
@@ -283,6 +284,11 @@ class BasicFitClient:
         items = [Badge.from_api(b) for b in data] if isinstance(data, list) else []
         items.sort(key=lambda b: str(b.earned_at or ""), reverse=True)
         return items
+
+    async def get_streak(self) -> Streak:
+        """Return the current visit streak (consecutive weeks with a check-in)."""
+        data = await self._api_get("/badges/progress")
+        return Streak.from_api(data if isinstance(data, dict) else {})
 
     # -- content library -------------------------------------------------------
 

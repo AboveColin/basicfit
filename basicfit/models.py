@@ -177,6 +177,29 @@ class Badge:
 
 
 @dataclass
+class Streak:
+    """The member's current visit streak (consecutive weeks with a check-in)."""
+
+    weeks: Optional[int]
+    next_badge_at: Optional[int] = None
+    last_increment: Optional[str] = None
+    raw: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_api(cls, payload: dict[str, Any]) -> "Streak":
+        """Build a :class:`Streak` from the ``/badges/progress`` payload."""
+        payload = payload or {}
+        progress = payload.get("progress")
+        nxt = (payload.get("possibleNextBadge") or {}).get("threshold")
+        return cls(
+            weeks=int(progress) if isinstance(progress, (int, float)) else None,
+            next_badge_at=int(nxt) if isinstance(nxt, (int, float)) else None,
+            last_increment=payload.get("lastIncrementDate"),
+            raw=payload,
+        )
+
+
+@dataclass
 class Workout:
     """A workout from the Basic-Fit content library."""
 

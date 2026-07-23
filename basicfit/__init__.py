@@ -31,6 +31,7 @@ from .models import (
     Club,
     Member,
     Recipe,
+    Streak,
     TokenSet,
     Workout,
 )
@@ -72,6 +73,7 @@ __all__ = [
     "Activity",
     "BodyMeasurement",
     "Badge",
+    "Streak",
     "Workout",
     "Recipe",
     "Club",
