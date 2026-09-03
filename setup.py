@@ -14,9 +14,14 @@ setup(
     install_requires=[
         "aiohttp",
     ],
+    extras_require={
+        "test": ["pytest>=8", "pytest-asyncio>=1.0", "pytest-cov"],
+    },
     python_requires=">=3.11",
     url="https://github.com/abovecolin/basicfit",
+    license="MIT",
     classifiers=[
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Operating System :: OS Independent",
     ],
