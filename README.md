@@ -160,5 +160,12 @@ A companion Home Assistant integration built on this package lives at [HA-Basic-
 - **Ranges:** the activities endpoint accepts spans up to 365 days; longer ranges are clamped.
 - **Errors:** the package raises `BasicFitAuthError` (sign in again), `BasicFitAPIError` (bad response, carries `status_code`), `BasicFitNetworkError` (timeout/connection) and `BasicFitValidationError` (bad arguments) — all subclasses of `BasicFitError`.
 
+## Supporting the project
+
+This project is free and stays free. If it is useful to you, you can support its
+development through [GitHub Sponsors](https://github.com/sponsors/AboveColin).
+Sponsorship is voluntary and unlocks nothing: every feature, fix and security
+update ships in the public release.
+
 ## License
 MIT — see [LICENSE](LICENSE).
